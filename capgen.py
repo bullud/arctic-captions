@@ -259,18 +259,20 @@ def lstm_layer(tparams, state_below, options, prefix='lstm', mask=None, **kwargs
 
 # Conditional LSTM layer with Attention
 def param_init_lstm_cond(options, params, prefix='lstm_cond', nin=None, dim=None, dimctx=None):
+    #nin=m, dim=n, dimctx=D or 2*D
     if nin is None:
         nin = options['dim']
     if dim is None:
         dim = options['dim']
     if dimctx is None:
         dimctx = options['dim']
+
     # input to LSTM, similar to the above, we stack the matricies for compactness, do one
     # dot product, and use the slice function below to get the activations for each "gate"
-    W = numpy.concatenate([norm_weight(nin,dim),
-                           norm_weight(nin,dim),
-                           norm_weight(nin,dim),
-                           norm_weight(nin,dim)], axis=1)
+    W = numpy.concatenate([norm_weight(nin, dim),
+                           norm_weight(nin, dim),
+                           norm_weight(nin, dim),
+                           norm_weight(nin, dim)], axis=1)
     params[_p(prefix,'W')] = W
 
     # LSTM to LSTM
@@ -286,6 +288,8 @@ def param_init_lstm_cond(options, params, prefix='lstm_cond', nin=None, dim=None
     # context to LSTM
     Wc = norm_weight(dimctx,dim*4)
     params[_p(prefix,'Wc')] = Wc
+
+
 
     # attention: context -> hidden
     Wc_att = norm_weight(dimctx, ortho=False)
@@ -1066,9 +1070,9 @@ def validate_options(options):
        3. A cost is defined, then gradient are obtained automatically with tensor.grad :D
        4. With some helper functions, gradient descent + periodic saving/printing proceeds
 """
-def train(dim_word=100,  # word vector dimensionality
-          ctx_dim=512,  # context vector dimensionality
-          dim=1000,  # the number of LSTM units
+def train(dim_word=100,  # word vector dimensionality      m in paper
+          ctx_dim=512,  # context vector dimensionality    D in paper
+          dim=1000,  # the number of LSTM units            n in paper
           attn_type='stochastic',  # [see section 4 from paper]
           n_layers_att=1,  # number of layers used to compute the attention weights
           n_layers_out=1,  # number of layers used to compute logit
