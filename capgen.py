@@ -521,7 +521,7 @@ def init_params(options):
     params = OrderedDict()
     # embedding: [matrix E in paper]
     params['Wemb'] = norm_weight(options['n_words'], options['dim_word'])
-    ctx_dim = options['ctx_dim']
+    ctx_dim = options['ctx_dim'] #D in paper
     if options['lstm_encoder']: # potential feature that runs an LSTM over the annotation vectors
         # encoder: LSTM
         params = get_layer('lstm')[0](options, params, prefix='encoder',
@@ -529,11 +529,14 @@ def init_params(options):
         params = get_layer('lstm')[0](options, params, prefix='encoder_rev',
                                       nin=options['ctx_dim'], dim=options['dim'])
         ctx_dim = options['dim'] * 2
+
     # init_state, init_cell: [top right on page 4]
     for lidx in xrange(1, options['n_layers_init']):
         params = get_layer('ff')[0](options, params, prefix='ff_init_%d'%lidx, nin=ctx_dim, nout=ctx_dim)
     params = get_layer('ff')[0](options, params, prefix='ff_state', nin=ctx_dim, nout=options['dim'])
     params = get_layer('ff')[0](options, params, prefix='ff_memory', nin=ctx_dim, nout=options['dim'])
+
+
     # decoder: LSTM: [equation (1)/(2)/(3)]
     params = get_layer('lstm_cond')[0](options, params, prefix='decoder',
                                        nin=options['dim_word'], dim=options['dim'],
