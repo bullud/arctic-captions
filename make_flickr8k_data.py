@@ -71,6 +71,13 @@ cnn = CNN(deploy=vgg_deploy_path,
 images_train = images[train_idx]
 image_id_dict_train = image_id_dict[train_idx]
 caption_image_id_train = caption_image_id[train_idx]
+print(train_idx)
+print(image_id_dict_train)
+print(caption_image_id)
+print(caption_image_id[0])
+print(caption_image_id_train[1:30])
+exit()
+
 captions_train = captions[train_idx]
 cap_train = zip(captions_train, caption_image_id_train)
 
