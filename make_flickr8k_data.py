@@ -23,9 +23,11 @@ dev_image_list =   '/home/lidian/models/Flickr8k/Flickr8k_text/Flickr_8k.devImag
 annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['image', 'caption'])
 
 annotations['image_num'] = annotations['image'].map(lambda x: x.split('#')[1])
+
 all_image = annotations['image'].map(lambda x: x.split('#')[0])
 all_image = all_image.unique()
 annotations['image'] = annotations['image'].map(lambda x: os.path.join(flickr_image_path, x.split('#')[0]))
+#not unique
 
 captions = annotations['caption'].values
 
@@ -39,6 +41,7 @@ with open('data/flickr8k/dictionary.pkl', 'wb') as f:
 
 images = pd.Series(annotations['image'].unique())
 # ipdb.set_trace()
+
 image_id_dict = pd.Series(np.array(images.index), index=images)
 
 caption_image_id = annotations['image'].map(lambda x: image_id_dict[x]).values
@@ -48,10 +51,12 @@ cap = zip(captions, caption_image_id)
 train_images = pd.read_table(train_image_list, sep='\t', header=None, names=['image'])
 train_image = train_images['image']
 train_idx = train_image.map(lambda x: np.where(all_image==x)[0][0])
+
 # ipdb.set_trace()
 test_images = pd.read_table(test_image_list, sep='\t', header=None, names=['image'])
 test_image = test_images['image']
 test_idx = test_image.map(lambda x: np.where(all_image==x)[0][0])
+
 dev_images = pd.read_table(dev_image_list, sep='\t', header=None, names=['image'])
 dev_image = dev_images['image']
 dev_idx = dev_image.map(lambda x: np.where(all_image==x)[0][0])
