@@ -405,7 +405,10 @@ def lstm_cond_layer(tparams, state_below, options, prefix='lstm',
 
         if options['attn_type'] == 'deterministic':
             alpha = tensor.nnet.softmax(alpha.reshape([alpha_shp[0],alpha_shp[1]])) # softmax [nsample, L, 1] -> [nsmaple, L]
+
             ctx_ = (context * alpha[:,:,None]).sum(1) # current context
+            # [nsample, L, ctx_dim] * [nsample, L, 1]
+
             alpha_sample = alpha # you can return something else reasonable here to debug
         else:
             alpha = tensor.nnet.softmax(temperature_c*alpha.reshape([alpha_shp[0],alpha_shp[1]])) # softmax
@@ -1150,11 +1153,7 @@ def train(dim_word=100,  # word vector dimensionality      m in paper
     #   3) inps - inputs for f_grad_shared
     #   4) cost - log likelihood for each sentence
     #   5) opts_out - optional outputs (e.g selector)
-    trng, use_noise, \
-          inps, alphas, alphas_sample,\
-          cost, \
-          opt_outs = \
-          build_model(tparams, model_options)
+    trng, use_noise, inps, alphas, alphas_sample, cost, opt_outs = build_model(tparams, model_options)
 
 
     # To sample, we use beam search: 1) f_init is a function that initializes
