@@ -393,17 +393,18 @@ def lstm_cond_layer(tparams, state_below, options, prefix='lstm',
         # attention computation
         # [described in  equations (4), (5), (6) in
         # section "3.1.2 Decoder: Long Short Term Memory Network]
-        pstate_ = tensor.dot(h_, tparams[_p(prefix,'Wd_att')])
-        pctx_ = pctx_ + pstate_[:,None,:]
+        pstate_ = tensor.dot(h_, tparams[_p(prefix,'Wd_att')])  #[nsample, ctx_dim]
+        pctx_ = pctx_ + pstate_[:,None,:] #[nsample, L, ctx_dim]
         pctx_list = []
         pctx_list.append(pctx_)
         pctx_ = tanh(pctx_)
-        alpha = tensor.dot(pctx_, tparams[_p(prefix,'U_att')])+tparams[_p(prefix, 'c_tt')]
+
+        alpha = tensor.dot(pctx_, tparams[_p(prefix,'U_att')])+tparams[_p(prefix, 'c_tt')] #[nsample, L, 1]
         alpha_pre = alpha
         alpha_shp = alpha.shape
 
         if options['attn_type'] == 'deterministic':
-            alpha = tensor.nnet.softmax(alpha.reshape([alpha_shp[0],alpha_shp[1]])) # softmax
+            alpha = tensor.nnet.softmax(alpha.reshape([alpha_shp[0],alpha_shp[1]])) # softmax [nsample, L, 1] -> [nsmaple, L]
             ctx_ = (context * alpha[:,:,None]).sum(1) # current context
             alpha_sample = alpha # you can return something else reasonable here to debug
         else:
