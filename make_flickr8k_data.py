@@ -9,14 +9,16 @@ import cPickle
 from sklearn.feature_extraction.text import CountVectorizer
 import pdb
 
-annotation_path = '/home/ubuntu/Data/xiaojun/Data/Flickr8k/Flickr8k.lemma.token.txt'
-vgg_deploy_path = 'VGG_ILSVRC_16_layers_deploy.prototxt'
-vgg_model_path = '/home/ubuntu/Data/xiaojun/models/vgg/VGG_ILSVRC_16_layers.caffemodel'
-flickr_image_path = '/home/ubuntu/Data/xiaojun/Data/Flickr8k/Flicker8k_Dataset'
+
+vgg_deploy_path = '/home/lidian/models/VGG/VGG_ILSVRC_16_layers_deploy.prototxt'
+vgg_model_path =  '/home/lidian/models/VGG/VGG_ILSVRC_16_layers.caffemodel'
+
+annotation_path = '/home/lidian/models/Flickr8k/Flickr8k_text/Flickr8k.lemma.token.txt'
+flickr_image_path = '/home/lidian/models/Flickr8k/Flickr8k_Dataset'
 feat_path = 'feat/flickr8k'
-train_image_list = '/home/ubuntu/Data/xiaojun/Data/Flickr8k/Flickr_8k.trainImages.txt'
-test_image_list = '/home/ubuntu/Data/xiaojun/Data/Flickr8k/Flickr_8k.testImages.txt'
-dev_image_list = '/home/ubuntu/Data/xiaojun/Data/Flickr8k/Flickr_8k.devImages.txt'
+train_image_list = '/home/lidian/models/Flickr8k/Flickr8k_text/Flickr_8k.trainImages.txt'
+test_image_list =  '/home/lidian/models/Flickr8k/Flickr8k_text/Flickr_8k.testImages.txt'
+dev_image_list =   '/home/lidian/models/Flickr8k/Flickr8k_text/Flickr_8k.devImages.txt'
 
 annotations = pd.read_table(annotation_path, sep='\t', header=None, names=['image', 'caption'])
 
